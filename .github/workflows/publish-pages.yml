@@ -54,7 +54,7 @@ jobs:
         uses: callmetango/archlinux-build-package-action@HEAD
         with:
           path: ${{ env.ARCH }}
-          repo-add-path: sonicde.db.tar.zst
+          repo-add-name: sonicde
           makepkg: false
 
       - name: Generate directory index
