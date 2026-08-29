@@ -37,16 +37,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          mkdir -p stable
-          gh release download --pattern '*.pkg.*' --dir "$ARCH" \
+          gh release download --pattern '*' --dir "$ARCH" \
               --repo "$GITHUB_REPOSITORY_OWNER/stable" "$ARCH"
+          printf 'Size of all packages: %s' "$(du -hs "$ARCH")"
 
-      - name: Create repo
-        uses: callmetango/archlinux-build-package-action@HEAD
-        with:
-          path: ${{ env.ARCH }}
-          repo-add-name: sonicde
-          makepkg: false
+      - name: Rename repo database
+        run: |
+          CEXT=tar.zst
+          cd "$ARCH"
+          mv sonicde-stable.db sonicde.db
+          mv sonicde-stable.db.$CEXT sonicde.db.$CEXT
+          mv sonicde-stable.files sonicde.files
+          mv sonicde-stable.files.$CEXT sonicde.files.$CEXT
 
       - name: Generate directory index
         uses: gacts/directory-listing@v1
